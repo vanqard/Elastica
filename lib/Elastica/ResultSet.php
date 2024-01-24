@@ -218,7 +218,7 @@ class ResultSet implements \Iterator, \Countable, \ArrayAccess
      *
      * @return int Size of set
      */
-    public function count()
+    public function count(): int
     {
         return count($this->_results);
     }
@@ -238,7 +238,7 @@ class ResultSet implements \Iterator, \Countable, \ArrayAccess
      *
      * @return \Elastica\Result|false Set object or false if not valid (no more entries)
      */
-    public function current()
+    public function current(): mixed
     {
         if ($this->valid()) {
             return $this->_results[$this->key()];
@@ -250,11 +250,9 @@ class ResultSet implements \Iterator, \Countable, \ArrayAccess
     /**
      * Sets pointer (current) to the next item of the set.
      */
-    public function next()
+    public function next(): void
     {
         ++$this->_position;
-
-        return $this->current();
     }
 
     /**
@@ -262,7 +260,7 @@ class ResultSet implements \Iterator, \Countable, \ArrayAccess
      *
      * @return int Current position
      */
-    public function key()
+    public function key(): mixed
     {
         return $this->_position;
     }
@@ -272,7 +270,7 @@ class ResultSet implements \Iterator, \Countable, \ArrayAccess
      *
      * @return bool True if object exists
      */
-    public function valid()
+    public function valid(): bool
     {
         return isset($this->_results[$this->key()]);
     }
@@ -280,7 +278,7 @@ class ResultSet implements \Iterator, \Countable, \ArrayAccess
     /**
      * Resets position to 0, restarts iterator.
      */
-    public function rewind()
+    public function rewind(): void
     {
         $this->_position = 0;
     }
@@ -294,7 +292,7 @@ class ResultSet implements \Iterator, \Countable, \ArrayAccess
      *
      * @return bool true on success or false on failure.
      */
-    public function offsetExists($offset)
+    public function offsetExists(mixed $offset): bool
     {
         return isset($this->_results[$offset]);
     }
@@ -310,7 +308,7 @@ class ResultSet implements \Iterator, \Countable, \ArrayAccess
      *
      * @return Result|null
      */
-    public function offsetGet($offset)
+    public function offsetGet(mixed $offset): mixed
     {
         if ($this->offsetExists($offset)) {
             return $this->_results[$offset];
@@ -329,7 +327,7 @@ class ResultSet implements \Iterator, \Countable, \ArrayAccess
      *
      * @throws Exception\InvalidException
      */
-    public function offsetSet($offset, $value)
+    public function offsetSet(mixed $offset, mixed $value): void
     {
         if (!($value instanceof Result)) {
             throw new InvalidException('ResultSet is a collection of Result only.');
@@ -349,7 +347,7 @@ class ResultSet implements \Iterator, \Countable, \ArrayAccess
      *
      * @param int $offset
      */
-    public function offsetUnset($offset)
+    public function offsetUnset(mixed $offset): void
     {
         unset($this->_results[$offset]);
     }

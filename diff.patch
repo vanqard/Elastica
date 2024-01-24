@@ -1,0 +1,688 @@
+diff --git a/composer.json b/composer.json
+index 606b5b42..f4116bc8 100644
+--- a/composer.json
++++ b/composer.json
+@@ -12,7 +12,7 @@
+         }
+     ],
+     "require": {
+-        "php": ">=5.6.0",
++        "php": "^8.0",
+         "psr/log": "~1.0",
+         "elasticsearch/elasticsearch": "5.4.*"
+     },
+diff --git a/lib/Elastica/Bulk/ResponseSet.php b/lib/Elastica/Bulk/ResponseSet.php
+index 5ba33324..96933b8a 100644
+--- a/lib/Elastica/Bulk/ResponseSet.php
++++ b/lib/Elastica/Bulk/ResponseSet.php
+@@ -97,7 +97,7 @@ class ResponseSet extends BaseResponse implements \Iterator, \Countable
+     /**
+      * @return bool|\Elastica\Bulk\Response
+      */
+-    public function current()
++    public function current(): mixed
+     {
+         return $this->valid()
+             ? $this->_bulkResponses[$this->key()]
+@@ -106,7 +106,7 @@ class ResponseSet extends BaseResponse implements \Iterator, \Countable
+ 
+     /**
+      */
+-    public function next()
++    public function next(): void
+     {
+         ++$this->_position;
+     }
+@@ -114,7 +114,7 @@ class ResponseSet extends BaseResponse implements \Iterator, \Countable
+     /**
+      * @return int
+      */
+-    public function key()
++    public function key(): mixed
+     {
+         return $this->_position;
+     }
+@@ -122,14 +122,14 @@ class ResponseSet extends BaseResponse implements \Iterator, \Countable
+     /**
+      * @return bool
+      */
+-    public function valid()
++    public function valid(): bool
+     {
+         return isset($this->_bulkResponses[$this->key()]);
+     }
+ 
+     /**
+      */
+-    public function rewind()
++    public function rewind(): void
+     {
+         $this->_position = 0;
+     }
+@@ -137,7 +137,7 @@ class ResponseSet extends BaseResponse implements \Iterator, \Countable
+     /**
+      * @return int
+      */
+-    public function count()
++    public function count(): int
+     {
+         return count($this->_bulkResponses);
+     }
+diff --git a/lib/Elastica/Multi/ResultSet.php b/lib/Elastica/Multi/ResultSet.php
+index fef1add3..3ce637a4 100644
+--- a/lib/Elastica/Multi/ResultSet.php
++++ b/lib/Elastica/Multi/ResultSet.php
+@@ -82,7 +82,7 @@ class ResultSet implements \Iterator, \ArrayAccess, \Countable
+     /**
+      * @return bool|\Elastica\ResultSet
+      */
+-    public function current()
++    public function current(): mixed
+     {
+         return $this->valid()
+             ? $this->_resultSets[$this->key()]
+@@ -91,7 +91,7 @@ class ResultSet implements \Iterator, \ArrayAccess, \Countable
+ 
+     /**
+      */
+-    public function next()
++    public function next(): void
+     {
+         ++$this->_position;
+     }
+@@ -99,7 +99,7 @@ class ResultSet implements \Iterator, \ArrayAccess, \Countable
+     /**
+      * @return int
+      */
+-    public function key()
++    public function key(): mixed
+     {
+         return $this->_position;
+     }
+@@ -107,14 +107,14 @@ class ResultSet implements \Iterator, \ArrayAccess, \Countable
+     /**
+      * @return bool
+      */
+-    public function valid()
++    public function valid(): bool
+     {
+         return isset($this->_resultSets[$this->key()]);
+     }
+ 
+     /**
+      */
+-    public function rewind()
++    public function rewind(): void
+     {
+         $this->_position = 0;
+     }
+@@ -122,7 +122,7 @@ class ResultSet implements \Iterator, \ArrayAccess, \Countable
+     /**
+      * @return int
+      */
+-    public function count()
++    public function count(): int
+     {
+         return count($this->_resultSets);
+     }
+@@ -132,7 +132,7 @@ class ResultSet implements \Iterator, \ArrayAccess, \Countable
+      *
+      * @return bool true on success or false on failure.
+      */
+-    public function offsetExists($offset)
++    public function offsetExists(mixed $offset): bool
+     {
+         return isset($this->_resultSets[$offset]);
+     }
+@@ -142,7 +142,7 @@ class ResultSet implements \Iterator, \ArrayAccess, \Countable
+      *
+      * @return mixed Can return all value types.
+      */
+-    public function offsetGet($offset)
++    public function offsetGet(mixed $offset): mixed
+     {
+         return isset($this->_resultSets[$offset]) ? $this->_resultSets[$offset] : null;
+     }
+@@ -151,7 +151,7 @@ class ResultSet implements \Iterator, \ArrayAccess, \Countable
+      * @param mixed $offset
+      * @param mixed $value
+      */
+-    public function offsetSet($offset, $value)
++    public function offsetSet(mixed $offset, mixed $value): void
+     {
+         if (is_null($offset)) {
+             $this->_resultSets[] = $value;
+@@ -163,7 +163,7 @@ class ResultSet implements \Iterator, \ArrayAccess, \Countable
+     /**
+      * @param mixed $offset
+      */
+-    public function offsetUnset($offset)
++    public function offsetUnset(mixed $offset): void
+     {
+         unset($this->_resultSets[$offset]);
+     }
+diff --git a/lib/Elastica/Param.php b/lib/Elastica/Param.php
+index b8ea4f35..e391c9be 100644
+--- a/lib/Elastica/Param.php
++++ b/lib/Elastica/Param.php
+@@ -186,7 +186,7 @@ class Param implements ArrayableInterface, \Countable
+      *
+      * @return int
+      */
+-    public function count()
++    public function count(): int
+     {
+         return count($this->_params);
+     }
+diff --git a/lib/Elastica/Query/MatchQuery.php b/lib/Elastica/Query/MatchQuery.php
+index f8fc1de5..5ecebe6b 100644
+--- a/lib/Elastica/Query/MatchQuery.php
++++ b/lib/Elastica/Query/MatchQuery.php
+@@ -9,7 +9,7 @@ namespace Elastica\Query;
+  *
+  * @link https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-match-query.html
+  */
+-class Match extends AbstractQuery
++class MatchQuery extends AbstractQuery
+ {
+     const OPERATOR_OR = 'or';
+     const OPERATOR_AND = 'and';
+diff --git a/lib/Elastica/QueryBuilder/DSL/Query.php b/lib/Elastica/QueryBuilder/DSL/Query.php
+index f0cb47e4..b791f1fb 100644
+--- a/lib/Elastica/QueryBuilder/DSL/Query.php
++++ b/lib/Elastica/QueryBuilder/DSL/Query.php
+@@ -14,7 +14,7 @@ use Elastica\Query\GeoDistance;
+ use Elastica\Query\HasChild;
+ use Elastica\Query\HasParent;
+ use Elastica\Query\Ids;
+-use Elastica\Query\Match;
++use Elastica\Query\MatchQuery;
+ use Elastica\Query\MatchAll;
+ use Elastica\Query\MatchNone;
+ use Elastica\Query\MoreLikeThis;
+@@ -64,11 +64,11 @@ class Query implements DSL
+      * @param string $field
+      * @param mixed  $values
+      *
+-     * @return Match
++     * @return MatchQuery
+      */
+     public function match($field = null, $values = null)
+     {
+-        return new Match($field, $values);
++        return new MatchQuery($field, $values);
+     }
+ 
+     /**
+diff --git a/lib/Elastica/ResultSet.php b/lib/Elastica/ResultSet.php
+index 30a1865a..b1a6aad1 100644
+--- a/lib/Elastica/ResultSet.php
++++ b/lib/Elastica/ResultSet.php
+@@ -218,7 +218,7 @@ class ResultSet implements \Iterator, \Countable, \ArrayAccess
+      *
+      * @return int Size of set
+      */
+-    public function count()
++    public function count(): int
+     {
+         return count($this->_results);
+     }
+@@ -238,7 +238,7 @@ class ResultSet implements \Iterator, \Countable, \ArrayAccess
+      *
+      * @return \Elastica\Result|false Set object or false if not valid (no more entries)
+      */
+-    public function current()
++    public function current(): mixed
+     {
+         if ($this->valid()) {
+             return $this->_results[$this->key()];
+@@ -250,11 +250,9 @@ class ResultSet implements \Iterator, \Countable, \ArrayAccess
+     /**
+      * Sets pointer (current) to the next item of the set.
+      */
+-    public function next()
++    public function next(): void
+     {
+         ++$this->_position;
+-
+-        return $this->current();
+     }
+ 
+     /**
+@@ -262,7 +260,7 @@ class ResultSet implements \Iterator, \Countable, \ArrayAccess
+      *
+      * @return int Current position
+      */
+-    public function key()
++    public function key(): mixed
+     {
+         return $this->_position;
+     }
+@@ -272,7 +270,7 @@ class ResultSet implements \Iterator, \Countable, \ArrayAccess
+      *
+      * @return bool True if object exists
+      */
+-    public function valid()
++    public function valid(): bool
+     {
+         return isset($this->_results[$this->key()]);
+     }
+@@ -280,7 +278,7 @@ class ResultSet implements \Iterator, \Countable, \ArrayAccess
+     /**
+      * Resets position to 0, restarts iterator.
+      */
+-    public function rewind()
++    public function rewind(): void
+     {
+         $this->_position = 0;
+     }
+@@ -294,7 +292,7 @@ class ResultSet implements \Iterator, \Countable, \ArrayAccess
+      *
+      * @return bool true on success or false on failure.
+      */
+-    public function offsetExists($offset)
++    public function offsetExists(mixed $offset): bool
+     {
+         return isset($this->_results[$offset]);
+     }
+@@ -310,7 +308,7 @@ class ResultSet implements \Iterator, \Countable, \ArrayAccess
+      *
+      * @return Result|null
+      */
+-    public function offsetGet($offset)
++    public function offsetGet(mixed $offset): mixed
+     {
+         if ($this->offsetExists($offset)) {
+             return $this->_results[$offset];
+@@ -329,7 +327,7 @@ class ResultSet implements \Iterator, \Countable, \ArrayAccess
+      *
+      * @throws Exception\InvalidException
+      */
+-    public function offsetSet($offset, $value)
++    public function offsetSet(mixed $offset, mixed $value): void
+     {
+         if (!($value instanceof Result)) {
+             throw new InvalidException('ResultSet is a collection of Result only.');
+@@ -349,7 +347,7 @@ class ResultSet implements \Iterator, \Countable, \ArrayAccess
+      *
+      * @param int $offset
+      */
+-    public function offsetUnset($offset)
++    public function offsetUnset(mixed $offset): void
+     {
+         unset($this->_results[$offset]);
+     }
+diff --git a/lib/Elastica/Scroll.php b/lib/Elastica/Scroll.php
+index 7b55fc1a..8d85ddba 100644
+--- a/lib/Elastica/Scroll.php
++++ b/lib/Elastica/Scroll.php
+@@ -60,7 +60,7 @@ class Scroll implements \Iterator
+      *
+      * @return ResultSet
+      */
+-    public function current()
++    public function current(): mixed
+     {
+         return $this->_currentResultSet;
+     }
+@@ -70,7 +70,7 @@ class Scroll implements \Iterator
+      *
+      * @link http://php.net/manual/en/iterator.next.php
+      */
+-    public function next()
++    public function next(): void
+     {
+         if ($this->currentPage < $this->totalPages) {
+             $this->_saveOptions();
+@@ -94,7 +94,7 @@ class Scroll implements \Iterator
+      *
+      * @return string
+      */
+-    public function key()
++    public function key(): mixed
+     {
+         return $this->_nextScrollId;
+     }
+@@ -106,7 +106,7 @@ class Scroll implements \Iterator
+      *
+      * @return bool
+      */
+-    public function valid()
++    public function valid(): bool
+     {
+         return $this->_nextScrollId !== null;
+     }
+@@ -116,7 +116,7 @@ class Scroll implements \Iterator
+      *
+      * @link http://php.net/manual/en/iterator.rewind.php
+      */
+-    public function rewind()
++    public function rewind(): void
+     {
+         // reset state
+         $this->_options = [null, null];
+@@ -135,7 +135,7 @@ class Scroll implements \Iterator
+     /**
+      * Cleares the search context on ES and marks this Scroll instance as finished.
+      */
+-    public function clear()
++    public function clear(): void
+     {
+         if (null !== $this->_nextScrollId) {
+             $this->_search->getClient()->request(
+@@ -155,7 +155,7 @@ class Scroll implements \Iterator
+      *
+      * @param ResultSet $resultSet
+      */
+-    protected function _setScrollId(ResultSet $resultSet)
++    protected function _setScrollId(ResultSet $resultSet): void
+     {
+         $this->_currentResultSet = $resultSet;
+         ++$this->currentPage;
+@@ -166,7 +166,7 @@ class Scroll implements \Iterator
+     /**
+      * Save all search options manipulated by Scroll.
+      */
+-    protected function _saveOptions()
++    protected function _saveOptions(): void
+     {
+         if ($this->_search->hasOption(Search::OPTION_SCROLL)) {
+             $this->_options[0] = $this->_search->getOption(Search::OPTION_SCROLL);
+@@ -180,7 +180,7 @@ class Scroll implements \Iterator
+     /**
+      * Revert search options to previously saved state.
+      */
+-    protected function _revertOptions()
++    protected function _revertOptions(): void
+     {
+         $this->_search->setOption(Search::OPTION_SCROLL, $this->_options[0]);
+         $this->_search->setOption(Search::OPTION_SCROLL_ID, $this->_options[1]);
+diff --git a/test/Elastica/Query/HasChildTest.php b/test/Elastica/Query/HasChildTest.php
+index ccbb5352..dc987078 100644
+--- a/test/Elastica/Query/HasChildTest.php
++++ b/test/Elastica/Query/HasChildTest.php
+@@ -4,7 +4,7 @@ namespace Elastica\Test\Query;
+ use Elastica\Document;
+ use Elastica\Query;
+ use Elastica\Query\HasChild;
+-use Elastica\Query\Match;
++use Elastica\Query\MatchQuery;
+ use Elastica\Query\MatchAll;
+ use Elastica\Test\Base as BaseTest;
+ use Elastica\Type\Mapping;
+@@ -64,7 +64,7 @@ class HasChildTest extends BaseTest
+     {
+         $index = $this->_getTestIndex();
+ 
+-        $f = new Match();
++        $f = new MatchQuery();
+         $f->setField('alt.name', 'testname');
+         $query = new HasChild($f, 'child');
+ 
+diff --git a/test/Elastica/Query/HasParentTest.php b/test/Elastica/Query/HasParentTest.php
+index 5dcb9e52..14eb8a6b 100644
+--- a/test/Elastica/Query/HasParentTest.php
++++ b/test/Elastica/Query/HasParentTest.php
+@@ -3,7 +3,7 @@ namespace Elastica\Test\Query;
+ 
+ use Elastica\Document;
+ use Elastica\Query\HasParent;
+-use Elastica\Query\Match;
++use Elastica\Query\MatchQuery;
+ use Elastica\Query\MatchAll;
+ use Elastica\Search;
+ use Elastica\Test\Base as BaseTest;
+@@ -94,7 +94,7 @@ class HasParentTest extends BaseTest
+         $results = $search->search($parentQuery);
+         $this->assertEquals(2, $results->count());
+ 
+-        $match = new Match();
++        $match = new MatchQuery();
+         $match->setField('brand', 'google');
+ 
+         $parentQuery = new HasParent($match, $shopType->getName());
+diff --git a/test/Elastica/Query/MatchTest.php b/test/Elastica/Query/MatchTest.php
+index d842a32f..c985ac61 100644
+--- a/test/Elastica/Query/MatchTest.php
++++ b/test/Elastica/Query/MatchTest.php
+@@ -2,7 +2,7 @@
+ namespace Elastica\Test\Query;
+ 
+ use Elastica\Document;
+-use Elastica\Query\Match;
++use Elastica\Query\MatchQuery;
+ use Elastica\Test\Base as BaseTest;
+ 
+ class MatchTest extends BaseTest
+@@ -24,7 +24,7 @@ class MatchTest extends BaseTest
+         $prefixLength = 3;
+         $maxExpansions = 12;
+ 
+-        $query = new Match();
++        $query = new MatchQuery();
+         $query->setFieldQuery($field, $testQuery);
+         $this->hideDeprecated();
+         $query->setFieldType($field, $type);
+@@ -80,7 +80,7 @@ class MatchTest extends BaseTest
+         $field = 'name';
+         $operator = 'or';
+ 
+-        $query = new Match();
++        $query = new MatchQuery();
+         $query->setFieldQuery($field, 'Basel New');
+         $query->setFieldOperator($field, $operator);
+ 
+@@ -111,7 +111,7 @@ class MatchTest extends BaseTest
+         $field = 'name';
+         $operator = 'or';
+ 
+-        $query = new Match();
++        $query = new MatchQuery();
+         $query->setFieldQuery($field, 'Basel New');
+         $query->setFieldOperator($field, $operator);
+         $query->setFieldBoost($field, 1.2);
+@@ -143,7 +143,7 @@ class MatchTest extends BaseTest
+         $field = 'name';
+         $operator = 'or';
+ 
+-        $query = new Match();
++        $query = new MatchQuery();
+         $query->setFieldQuery($field, 'Basel New');
+         $query->setFieldOperator($field, $operator);
+         $query->setFieldBoost($field, '1.2');
+@@ -170,9 +170,9 @@ class MatchTest extends BaseTest
+ 
+         $index->refresh();
+ 
+-        $query = new Match();
++        $query = new MatchQuery();
+         $query->setFieldQuery('name', '');
+-        $query->setFieldZeroTermsQuery('name', Match::ZERO_TERM_ALL);
++        $query->setFieldZeroTermsQuery('name', MatchQuery::ZERO_TERM_ALL);
+ 
+         $resultSet = $index->search($query);
+ 
+@@ -201,7 +201,7 @@ class MatchTest extends BaseTest
+         $field = 'name';
+         $type = 'phrase';
+ 
+-        $query = new Match();
++        $query = new MatchQuery();
+         $query->setFieldQuery($field, 'New York');
+         $this->hideDeprecated();
+         $query->setFieldType($field, $type);
+@@ -234,7 +234,7 @@ class MatchTest extends BaseTest
+         $field = 'name';
+         $type = 'phrase_prefix';
+ 
+-        $query = new Match();
++        $query = new MatchQuery();
+         $query->setFieldQuery($field, 'New');
+         $this->hideDeprecated();
+         $query->setFieldType($field, $type);
+@@ -251,7 +251,7 @@ class MatchTest extends BaseTest
+     public function testMatchFuzzinessType()
+     {
+         $field = 'test';
+-        $query = new Match();
++        $query = new MatchQuery();
+ 
+         $fuzziness = 'AUTO';
+         $query->setFieldFuzziness($field, $fuzziness);
+@@ -271,14 +271,14 @@ class MatchTest extends BaseTest
+      */
+     public function testConstruct()
+     {
+-        $match = new Match(null, 'values');
++        $match = new MatchQuery(null, 'values');
+         $this->assertEquals(['match' => []], $match->toArray());
+ 
+-        $match = new Match('field', null);
++        $match = new MatchQuery('field', null);
+         $this->assertEquals(['match' => []], $match->toArray());
+ 
+-        $match1 = new Match('field', 'values');
+-        $match2 = new Match();
++        $match1 = new MatchQuery('field', 'values');
++        $match2 = new MatchQuery();
+         $match2->setField('field', 'values');
+         $this->assertEquals($match1->toArray(), $match2->toArray());
+     }
+diff --git a/test/Elastica/Query/PostFilterTest.php b/test/Elastica/Query/PostFilterTest.php
+index 21014765..96345beb 100644
+--- a/test/Elastica/Query/PostFilterTest.php
++++ b/test/Elastica/Query/PostFilterTest.php
+@@ -3,7 +3,7 @@ namespace Elastica\Test\Query;
+ 
+ use Elastica\Document;
+ use Elastica\Query;
+-use Elastica\Query\Match;
++use Elastica\Query\MatchQuery;
+ use Elastica\Query\Term;
+ use Elastica\Test\Base as BaseTest;
+ 
+@@ -47,7 +47,7 @@ class PostFilterTest extends BaseTest
+     {
+         $query = new Query();
+ 
+-        $match = new Match();
++        $match = new MatchQuery();
+         $match->setField('make', 'ford');
+ 
+         $query->setQuery($match);
+diff --git a/test/Elastica/Query/RescoreTest.php b/test/Elastica/Query/RescoreTest.php
+index 6973fba1..d5902152 100644
+--- a/test/Elastica/Query/RescoreTest.php
++++ b/test/Elastica/Query/RescoreTest.php
+@@ -2,7 +2,7 @@
+ namespace Elastica\Test\Query;
+ 
+ use Elastica\Query;
+-use Elastica\Query\Match;
++use Elastica\Query\MatchQuery;
+ use Elastica\Query\Term;
+ use Elastica\Rescore\Query as QueryRescore;
+ use Elastica\Test\Base as BaseTest;
+@@ -15,7 +15,7 @@ class RescoreTest extends BaseTest
+     public function testToArray()
+     {
+         $query = new Query();
+-        $mainQuery = new Match();
++        $mainQuery = new MatchQuery();
+         $mainQuery = $mainQuery->setFieldQuery('test1', 'foo');
+         $secQuery = new Term();
+         $secQuery = $secQuery->setTerm('test2', 'bar', 2);
+@@ -55,7 +55,7 @@ class RescoreTest extends BaseTest
+     public function testSetSize()
+     {
+         $query = new Query();
+-        $mainQuery = new Match();
++        $mainQuery = new MatchQuery();
+         $mainQuery = $mainQuery->setFieldQuery('test1', 'foo');
+         $secQuery = new Term();
+         $secQuery = $secQuery->setTerm('test2', 'bar', 2);
+@@ -97,7 +97,7 @@ class RescoreTest extends BaseTest
+     public function testSetWeights()
+     {
+         $query = new Query();
+-        $mainQuery = new Match();
++        $mainQuery = new MatchQuery();
+         $mainQuery = $mainQuery->setFieldQuery('test1', 'foo');
+         $secQuery = new Term();
+         $secQuery = $secQuery->setTerm('test2', 'bar', 2);
+@@ -143,7 +143,7 @@ class RescoreTest extends BaseTest
+     public function testMultipleQueries()
+     {
+         $query = new Query();
+-        $mainQuery = new Match();
++        $mainQuery = new MatchQuery();
+         $mainQuery = $mainQuery->setFieldQuery('test1', 'foo');
+ 
+         $secQuery1 = new Term();
+@@ -215,7 +215,7 @@ class RescoreTest extends BaseTest
+     public function testQuery()
+     {
+         $query = new Query();
+-        $mainQuery = new Match();
++        $mainQuery = new MatchQuery();
+         $mainQuery = $mainQuery->setFieldQuery('test1', 'foo');
+         $secQuery = new Term();
+         $secQuery = $secQuery->setTerm('test2', 'bar', 2);
+diff --git a/test/Elastica/QueryBuilder/DSL/QueryTest.php b/test/Elastica/QueryBuilder/DSL/QueryTest.php
+index ba48c3d3..6ac87ace 100644
+--- a/test/Elastica/QueryBuilder/DSL/QueryTest.php
++++ b/test/Elastica/QueryBuilder/DSL/QueryTest.php
+@@ -2,7 +2,7 @@
+ namespace Elastica\Test\QueryBuilder\DSL;
+ 
+ use Elastica\Query;
+-use Elastica\Query\Match;
++use Elastica\Query\MatchQuery;
+ use Elastica\QueryBuilder\DSL;
+ 
+ class QueryTest extends AbstractDSLTest
+@@ -27,7 +27,7 @@ class QueryTest extends AbstractDSLTest
+ 
+         $match = $queryDSL->match('field', 'match');
+         $this->assertEquals('match', $match->getParam('field'));
+-        $this->assertInstanceOf(Match::class, $match);
++        $this->assertInstanceOf(MatchQuery::class, $match);
+     }
+ 
+     /**
+@@ -43,10 +43,10 @@ class QueryTest extends AbstractDSLTest
+         $this->_assertImplemented($queryDSL, 'dis_max', Query\DisMax::class, []);
+         $this->_assertImplemented($queryDSL, 'function_score', Query\FunctionScore::class, []);
+         $this->_assertImplemented($queryDSL, 'fuzzy', Query\Fuzzy::class, ['field', 'type']);
+-        $this->_assertImplemented($queryDSL, 'has_child', Query\HasChild::class, [new Match()]);
+-        $this->_assertImplemented($queryDSL, 'has_parent', Query\HasParent::class, [new Match(), 'type']);
++        $this->_assertImplemented($queryDSL, 'has_child', Query\HasChild::class, [new MatchQuery()]);
++        $this->_assertImplemented($queryDSL, 'has_parent', Query\HasParent::class, [new MatchQuery(), 'type']);
+         $this->_assertImplemented($queryDSL, 'ids', Query\Ids::class, ['type', []]);
+-        $this->_assertImplemented($queryDSL, 'match', Match::class, ['field', 'values']);
++        $this->_assertImplemented($queryDSL, 'match', MatchQuery::class, ['field', 'values']);
+         $this->_assertImplemented($queryDSL, 'match_all', Query\MatchAll::class, []);
+         $this->_assertImplemented($queryDSL, 'match_none', Query\MatchNone::class, []);
+         $this->_assertImplemented($queryDSL, 'more_like_this', Query\MoreLikeThis::class, []);
+diff --git a/test/Elastica/ReindexTest.php b/test/Elastica/ReindexTest.php
+index 2536f540..ee45427e 100644
+--- a/test/Elastica/ReindexTest.php
++++ b/test/Elastica/ReindexTest.php
+@@ -3,7 +3,7 @@ namespace Elastica\Test;
+ 
+ use Elastica\Document;
+ use Elastica\Index;
+-use Elastica\Query\Match;
++use Elastica\Query\MatchQuery;
+ use Elastica\Reindex;
+ use Elastica\Type;
+ 
+@@ -127,7 +127,7 @@ class ReindexTest extends Base
+ 
+         $newIndex = $this->_createIndex('idx2', true, 2);
+ 
+-        $query = new Match('id', 8);
++        $query = new MatchQuery('id', 8);
+ 
+         $reindex = new Reindex($oldIndex, $newIndex, [
+             Reindex::QUERY => $query,

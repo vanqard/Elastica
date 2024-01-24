@@ -82,7 +82,7 @@ class ResultSet implements \Iterator, \ArrayAccess, \Countable
     /**
      * @return bool|\Elastica\ResultSet
      */
-    public function current()
+    public function current(): mixed
     {
         return $this->valid()
             ? $this->_resultSets[$this->key()]
@@ -91,7 +91,7 @@ class ResultSet implements \Iterator, \ArrayAccess, \Countable
 
     /**
      */
-    public function next()
+    public function next(): void
     {
         ++$this->_position;
     }
@@ -99,7 +99,7 @@ class ResultSet implements \Iterator, \ArrayAccess, \Countable
     /**
      * @return int
      */
-    public function key()
+    public function key(): mixed
     {
         return $this->_position;
     }
@@ -107,14 +107,14 @@ class ResultSet implements \Iterator, \ArrayAccess, \Countable
     /**
      * @return bool
      */
-    public function valid()
+    public function valid(): bool
     {
         return isset($this->_resultSets[$this->key()]);
     }
 
     /**
      */
-    public function rewind()
+    public function rewind(): void
     {
         $this->_position = 0;
     }
@@ -122,7 +122,7 @@ class ResultSet implements \Iterator, \ArrayAccess, \Countable
     /**
      * @return int
      */
-    public function count()
+    public function count(): int
     {
         return count($this->_resultSets);
     }
@@ -132,7 +132,7 @@ class ResultSet implements \Iterator, \ArrayAccess, \Countable
      *
      * @return bool true on success or false on failure.
      */
-    public function offsetExists($offset)
+    public function offsetExists(mixed $offset): bool
     {
         return isset($this->_resultSets[$offset]);
     }
@@ -142,7 +142,7 @@ class ResultSet implements \Iterator, \ArrayAccess, \Countable
      *
      * @return mixed Can return all value types.
      */
-    public function offsetGet($offset)
+    public function offsetGet(mixed $offset): mixed
     {
         return isset($this->_resultSets[$offset]) ? $this->_resultSets[$offset] : null;
     }
@@ -151,7 +151,7 @@ class ResultSet implements \Iterator, \ArrayAccess, \Countable
      * @param mixed $offset
      * @param mixed $value
      */
-    public function offsetSet($offset, $value)
+    public function offsetSet(mixed $offset, mixed $value): void
     {
         if (is_null($offset)) {
             $this->_resultSets[] = $value;
@@ -163,7 +163,7 @@ class ResultSet implements \Iterator, \ArrayAccess, \Countable
     /**
      * @param mixed $offset
      */
-    public function offsetUnset($offset)
+    public function offsetUnset(mixed $offset): void
     {
         unset($this->_resultSets[$offset]);
     }
