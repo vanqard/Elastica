@@ -60,7 +60,8 @@ class Scroll implements \Iterator
      *
      * @return ResultSet
      */
-    public function current(): mixed
+    #[\ReturnTypeWillChange]
+    public function current()
     {
         return $this->_currentResultSet;
     }
@@ -94,7 +95,8 @@ class Scroll implements \Iterator
      *
      * @return string
      */
-    public function key(): mixed
+    #[\ReturnTypeWillChange]
+    public function key()
     {
         return $this->_nextScrollId;
     }

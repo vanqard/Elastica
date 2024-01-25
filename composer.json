@@ -14,7 +14,7 @@
     "require": {
         "php": "^7.4|^8.0",
         "psr/log": "~1.0",
-        "elasticsearch/elasticsearch": "5.4.1"
+        "elasticsearch/elasticsearch": "5.4.1.x-dev"
     },
     "require-dev": {
         "aws/aws-sdk-php": "~3.0",
@@ -38,7 +38,7 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "5.3.x-dev"
+            "dev-master": "5.4.1.x-dev"
         }
     }
 }

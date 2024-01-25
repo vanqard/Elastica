@@ -97,7 +97,8 @@ class ResponseSet extends BaseResponse implements \Iterator, \Countable
     /**
      * @return bool|\Elastica\Bulk\Response
      */
-    public function current(): mixed
+    #[\ReturnTypeWillChange]
+    public function current()
     {
         return $this->valid()
             ? $this->_bulkResponses[$this->key()]
@@ -114,7 +115,8 @@ class ResponseSet extends BaseResponse implements \Iterator, \Countable
     /**
      * @return int
      */
-    public function key(): mixed
+    #[\ReturnTypeWillChange]
+    public function key()
     {
         return $this->_position;
     }

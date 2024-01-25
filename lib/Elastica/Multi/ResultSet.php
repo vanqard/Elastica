@@ -82,7 +82,8 @@ class ResultSet implements \Iterator, \ArrayAccess, \Countable
     /**
      * @return bool|\Elastica\ResultSet
      */
-    public function current(): mixed
+    #[\ReturnTypeWillChange]
+    public function current()
     {
         return $this->valid()
             ? $this->_resultSets[$this->key()]
@@ -99,7 +100,8 @@ class ResultSet implements \Iterator, \ArrayAccess, \Countable
     /**
      * @return int
      */
-    public function key(): mixed
+    #[\ReturnTypeWillChange]
+    public function key()
     {
         return $this->_position;
     }
@@ -132,7 +134,7 @@ class ResultSet implements \Iterator, \ArrayAccess, \Countable
      *
      * @return bool true on success or false on failure.
      */
-    public function offsetExists(mixed $offset): bool
+    public function offsetExists($offset): bool
     {
         return isset($this->_resultSets[$offset]);
     }
@@ -142,7 +144,8 @@ class ResultSet implements \Iterator, \ArrayAccess, \Countable
      *
      * @return mixed Can return all value types.
      */
-    public function offsetGet(mixed $offset): mixed
+    #[\ReturnTypeWillChange]
+    public function offsetGet($offset)
     {
         return isset($this->_resultSets[$offset]) ? $this->_resultSets[$offset] : null;
     }
@@ -151,7 +154,7 @@ class ResultSet implements \Iterator, \ArrayAccess, \Countable
      * @param mixed $offset
      * @param mixed $value
      */
-    public function offsetSet(mixed $offset, mixed $value): void
+    public function offsetSet($offset, $value): void
     {
         if (is_null($offset)) {
             $this->_resultSets[] = $value;
@@ -163,7 +166,7 @@ class ResultSet implements \Iterator, \ArrayAccess, \Countable
     /**
      * @param mixed $offset
      */
-    public function offsetUnset(mixed $offset): void
+    public function offsetUnset($offset): void
     {
         unset($this->_resultSets[$offset]);
     }

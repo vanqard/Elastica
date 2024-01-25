@@ -238,7 +238,8 @@ class ResultSet implements \Iterator, \Countable, \ArrayAccess
      *
      * @return \Elastica\Result|false Set object or false if not valid (no more entries)
      */
-    public function current(): mixed
+    #[\ReturnTypeWillChange]
+    public function current()
     {
         if ($this->valid()) {
             return $this->_results[$this->key()];
@@ -260,7 +261,8 @@ class ResultSet implements \Iterator, \Countable, \ArrayAccess
      *
      * @return int Current position
      */
-    public function key(): mixed
+    #[\ReturnTypeWillChange]
+    public function key()
     {
         return $this->_position;
     }
@@ -292,7 +294,7 @@ class ResultSet implements \Iterator, \Countable, \ArrayAccess
      *
      * @return bool true on success or false on failure.
      */
-    public function offsetExists(mixed $offset): bool
+    public function offsetExists($offset): bool
     {
         return isset($this->_results[$offset]);
     }
@@ -308,7 +310,8 @@ class ResultSet implements \Iterator, \Countable, \ArrayAccess
      *
      * @return Result|null
      */
-    public function offsetGet(mixed $offset): mixed
+    #[\ReturnTypeWillChange]
+    public function offsetGet($offset)
     {
         if ($this->offsetExists($offset)) {
             return $this->_results[$offset];
@@ -327,7 +330,7 @@ class ResultSet implements \Iterator, \Countable, \ArrayAccess
      *
      * @throws Exception\InvalidException
      */
-    public function offsetSet(mixed $offset, mixed $value): void
+    public function offsetSet($offset, $value): void
     {
         if (!($value instanceof Result)) {
             throw new InvalidException('ResultSet is a collection of Result only.');
@@ -347,7 +350,7 @@ class ResultSet implements \Iterator, \Countable, \ArrayAccess
      *
      * @param int $offset
      */
-    public function offsetUnset(mixed $offset): void
+    public function offsetUnset($offset): void
     {
         unset($this->_results[$offset]);
     }
